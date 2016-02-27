@@ -8,7 +8,7 @@ for (var i = 0; i < 100; i++) {
 }
 
 new Vue({
-  template: '<div><target msg="whaa" :obj="obj"></target><other></other></div>',
+  template: '<div><target msg="whaa" :bool="false" :obj="obj"></target><other></other></div>',
   components: { Target, Other },
   data: {
     obj: {

@@ -22,7 +22,7 @@
       <section class="data">
         <data-field v-for="field in target.state"
           track-by="key"
-          :field="field"
+          :field.sync="field"
           :depth="0">
         </data-field>
         <p class="no-state" v-show="target.state && !target.state.length">

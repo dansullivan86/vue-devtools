@@ -9,7 +9,8 @@
         v-show="isExpandableType">
       </span>
       <span class="key">{{ field.key }}</span><span class="colon">:</span>
-      <span class="value" :class="valueType">{{ formattedValue }}</span>
+      <span class="value" :class="valueType" v-if="!valueType">{{ formattedValue }}</span>
+      <input class="value" v-model="editableValue" placeholder="{{ formattedValue }}" v-if="valueType">
       <div class="type {{ field.type }}" v-show="field.type" >
         {{ field.type }}
         <div class="meta" v-if="field.meta">
@@ -67,6 +68,19 @@ export default {
     isExpandableType () {
       let value = this.field.value
       return Array.isArray(value) || isPlainObject(value)
+    },
+    editableValue: {
+      get () {
+        return this.field.value
+      },
+      set (value) {
+        if (typeof this.field.value === 'number') {
+          value = Number(value)
+        } else if (typeof this.field.value === 'boolean') {
+          value = value.toUpperCase() === 'TRUE'
+        }
+        this.field.value = value
+      }
     },
     formattedValue () {
       let value = this.field.value

@@ -13,6 +13,7 @@ let currentInspectedId
 let bridge
 let isLiveMode = true
 let filter = ''
+let flushing = false
 
 export function initBackend (_bridge) {
   bridge = _bridge
@@ -59,6 +60,15 @@ function connect () {
   bridge.on('filter-instances', _filter => {
     filter = _filter.toLowerCase()
     flush()
+  })
+
+  bridge.on('update-data', (data) => {
+    let instance = instanceMap.get(currentInspectedId)
+    if (data && data.length && !flushing) {
+      data.forEach((item) => {
+        instance._data[item.key] = item.value
+      })
+    }
   })
 
   bridge.on('refresh', scan)
@@ -126,10 +136,14 @@ function walk (node, fn) {
  */
 
 function flush () {
+  flushing = true
   bridge.send('flush', {
     inspectedInstance: getInstanceDetails(currentInspectedId),
     instances: findQualifiedChildrenFromList(rootInstances)
   })
+  setTimeout(() => {
+    flushing = false
+  }, 10)
 }
 
 /**

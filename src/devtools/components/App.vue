@@ -17,7 +17,7 @@
   </div>
   <split-pane class="container">
     <tree slot="left" :instances="instances"></tree>
-    <inspector slot="right" :target="inspectedInstance"></inspector>
+    <inspector slot="right" :target.sync="inspectedInstance"></inspector>
   </split-pane>
 </div>
 </template>
@@ -71,6 +71,12 @@ export default {
   watch: {
     filter (val) {
       bridge.send('filter-instances', val)
+    },
+    inspectedInstance: {
+      handler: (val, oldVal) => {
+        bridge.send('update-data', val.state)
+      },
+      deep: true
     }
   },
   methods: {

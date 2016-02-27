@@ -15,7 +15,8 @@ export default {
   components: { Other },
   props: {
     msg: String,
-    obj: null
+    obj: null,
+    bool: Boolean
   },
   data() {
     return {
